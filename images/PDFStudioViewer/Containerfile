@@ -1,0 +1,42 @@
+# syntax=docker.io/docker/dockerfile:1
+
+ARG from="docker.io/debian:bullseye-slim"
+
+## ======================================================================
+
+FROM ${from} AS apt-cache
+
+LABEL maintainer="SATOH Fumiyasu"
+
+ENV DEBIAN_FRONTEND="noninteractive"
+
+COPY PDFStudioViewer_linux64.sh .
+
+RUN \
+  set -ex;  \
+  apt-get update; \
+  apt-get install --yes --quiet --no-install-recommends \
+    ca-certificates \
+    curl \
+    libx11-6 \
+    libxext6 \
+    libxtst6 \
+    libxrender1 \
+  ; \
+  if [ ! -s PDFStudioViewer_linux64.sh ]; then \
+    curl \
+      --silent \
+      --show-error \
+      --remote-name \
+      https://download.qoppa.com/pdfstudioviewer/PDFStudioViewer_linux64.sh \
+    ; \
+  fi; \
+  ( \
+    echo 1; \
+    echo o; \
+    echo; echo; echo; echo; echo; echo; echo; echo; echo; echo; echo; echo; \
+    echo 1; \
+    echo; \
+    echo y;\
+  ) |sh /PDFStudioViewer_linux64.sh || echo $?; \
+  true
