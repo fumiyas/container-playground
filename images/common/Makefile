@@ -1,21 +1,47 @@
-DOCKERFILE=		Containerfile
+CONTAINERFILE=		Containerfile
 
 DOCKER=			docker
-DOCKER_ENV=
-DOCKER_OPTS=
-
-DOCKER_CMD=		$(DOCKER_X_ENV) $(DOCKER_ENV) $(DOCKER) $(DOCKER_X_OPTS) $(DOCKER_OPTS)
-
-DOCKER_BUILD_OPTS=
-DOCKER_BUILD_CMD=	$(DOCKER_CMD) image build --file $(DOCKERFILE) $(DOCKER_BUILD_X_OPTS) $(DOCKER_BUILD_OPTS)
-
-DOCKER_RUN_OPTS=
-DOCKER_RUN_CMD=		$(DOCKER_CMD) container run $(DOCKER_RUN_X_OPTS) $(DOCKER_RUN_OPTS)
-
-ifneq (,$(findstring docker,$(DOCKER)))
 DOCKER_BUILDKIT=	1
-DOCKER_X_ENV=		DOCKER_BUILDKIT=$(DOCKER_BUILDKIT)
-DOCKER_BUILD_X_OPTS=	--progress=plain
+ROOTLESSKIT=		rootlesskit
+
+PODMAN=			podman
+BUILDAH=		buildah
+
+## ======================================================================
+
+C_MANAGER=		$(DOCKER)
+C_MANAGER_ENV=
+C_MANAGER_OPTS=
+C_MANAGER_CMD=		$(C_MANAGER_X_ENV) $(C_MANAGER_ENV) $(C_MANAGER) $(C_MANAGER_X_OPTS) $(C_MANAGER_OPTS)
+
+C_MANAGER_RUN_ENV=
+C_MANAGER_RUN_OPTS=
+C_MANAGER_RUN_CMD=	$(C_MANAGER_X_RUN_ENV) $(C_MANAGER_RUN_ENV) $(C_MANAGER_CMD) container run $(C_MANAGER_RUN_X_OPTS) $(C_MANAGER_RUN_OPTS)
+
+## ----------------------------------------------------------------------
+
+C_BUILDER=		$(C_MANAGER)
+C_BUILDER_ENV=
+C_BUILDER_OPTS=
+C_BUILDER_CMD=		$(C_BUILDER_X_ENV) $(C_BUILDER_ENV) $(C_BUILDER) $(C_BUILDER_X_OPTS) $(C_BUILDER_OPTS)
+
+C_BUILDER_BUILD_ENV=
+C_BUILDER_BUILD_OPTS=
+C_BUILDER_BUILD_CMD=	$(C_BUILDER_BUILD_X_ENV) $(C_BUILDER_BUILD_ENV) $(C_BUILDER_CMD) image build --file $(CONTAINERFILE) $(C_BUILDER_BUILD_X_OPTS) $(C_BUILDER_BUILD_OPTS)
+
+## ----------------------------------------------------------------------
+
+ifneq (,$(findstring docker,$(C_BUILDER)))
+C_BUILDER_X_ENV=	DOCKER_BUILDKIT=$(DOCKER_BUILDKIT)
+C_BUILDER_BUILD_X_OPTS=	--progress=plain
+endif
+
+ifneq (,$(findstring docker,$(C_MANAGER)))
+C_UNSHARE=		$(ROOTLESSKIT)
+endif
+
+ifneq (,$(findstring podman,$(C_MANAGER)))
+C_UNSHARE=		$(BUILDAH) unshare
 endif
 
 ## ----------------------------------------------------------------------
@@ -23,6 +49,10 @@ endif
 CURL=			curl
 CURL_OPTS=		--xattr
 CURL_CMD=		$(CURL) $(CURL_OPTS)
+
+## ----------------------------------------------------------------------
+
+RUN_CMD=		bash
 
 ## ======================================================================
 
@@ -39,15 +69,15 @@ clean:
 
 .POHNY: image
 image: $(IMAGE_DEPS)
-	$(DOCKER_BUILD_CMD) --tag $(IMAGE_NAME) .
+	$(C_BUILDER_BUILD_CMD) --tag $(IMAGE_NAME) .
 
 .POHNY: run
 run: $(RUN_DEPS)
-	$(DOCKER_RUN_CMD) \
+	$(C_MANAGER_RUN_CMD) \
 	  --interactive \
 	  --tty \
 	  --rm \
-	  $(RUN_DOCKER_OPTS) \
+	  $(C_MANAGER_RUN_OPTS) \
 	  $(IMAGE_NAME) \
-	  /bin/bash \
+	  $(RUN_CMD) \
 	;
