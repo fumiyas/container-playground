@@ -13,7 +13,7 @@ ENV DEBIAN_FRONTEND="noninteractive"
 COPY PDFStudioViewer_linux64.sh .
 
 RUN \
-  set -ex;  \
+  set -ex; \
   apt-get update; \
   apt-get install --yes --quiet --no-install-recommends \
     ca-certificates \
@@ -39,4 +39,4 @@ RUN \
     echo; \
     echo y;\
   ) |sh /PDFStudioViewer_linux64.sh || echo $?; \
-  true
+  exit 0
