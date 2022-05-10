@@ -29,6 +29,10 @@ C_BUILDER_BUILD_ENV=
 C_BUILDER_BUILD_OPTS=
 C_BUILDER_BUILD_CMD=	$(C_BUILDER_BUILD_X_ENV) $(C_BUILDER_BUILD_ENV) $(C_BUILDER_CMD) image build --file $(CONTAINERFILE) $(C_BUILDER_BUILD_X_OPTS) $(C_BUILDER_BUILD_OPTS)
 
+C_BUILDER_PUSH_ENV=
+C_BUILDER_PUSH_OPTS=
+C_BUILDER_PUSH_CMD=	$(C_BUILDER_PUSH_X_ENV) $(C_BUILDER_PUSH_ENV) $(C_BUILDER_CMD) image push $(C_BUILDER_PUSH_X_OPTS) $(C_BUILDER_PUSH_OPTS)
+
 ## ----------------------------------------------------------------------
 
 ifneq (,$(findstring docker,$(C_BUILDER)))
@@ -70,6 +74,10 @@ clean:
 .POHNY: image
 image: $(IMAGE_DEPS)
 	$(C_BUILDER_BUILD_CMD) --tag $(IMAGE_NAME) .
+
+.POHNY: push
+push:
+	$(C_BUILDER_PUSH_CMD) $(IMAGE_NAME)
 
 .POHNY: run
 run: $(RUN_DEPS)
