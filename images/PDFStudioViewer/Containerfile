@@ -38,7 +38,7 @@ RUN \
     -dir /usr/local/pdfstudioviewer \
   ; \
   ln -s \
-    /usr/local/pdfstudioviewer/pdfstudioviewer2022 \
+    /usr/local/pdfstudioviewer/pdfstudioviewer20?? \
     /usr/local/bin/pdfstudioviewer \
   ;
   exit 0
