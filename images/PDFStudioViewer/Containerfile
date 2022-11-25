@@ -31,12 +31,13 @@ RUN \
       https://download.qoppa.com/pdfstudioviewer/PDFStudioViewer_linux64.sh \
     ; \
   fi; \
-  ( \
-    echo 1; \
-    echo o; \
-    echo; echo; echo; echo; echo; echo; echo; echo; echo; echo; echo; echo; \
-    echo 1; \
-    echo; \
-    echo y;\
-  ) |sh /PDFStudioViewer_linux64.sh || echo $?; \
+  LANG=C.UTF-8 sh /PDFStudioViewer_linux64.sh \
+    -q \
+    -c \
+    -dir /usr/local/pdfstudioviewer \
+  ; \
+  ln -s \
+    /usr/local/pdfstudioviewer/pdfstudioviewer2022 \
+    /usr/local/bin/pdfstudioviewer \
+  ;
   exit 0
