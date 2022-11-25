@@ -56,6 +56,7 @@ CURL_CMD=		$(CURL) $(CURL_OPTS)
 
 ## ----------------------------------------------------------------------
 
+RUN_CONTAINER_OPTS=	--interactive --tty --rm
 RUN_CMD=		bash
 
 ## ======================================================================
@@ -82,10 +83,7 @@ push:
 .POHNY: run
 run: $(RUN_DEPS)
 	$(C_MANAGER_RUN_CMD) \
-	  --interactive \
-	  --tty \
-	  --rm \
-	  $(C_MANAGER_RUN_OPTS) \
+	  $(RUN_CONTAINER_OPTS) \
 	  $(IMAGE_NAME) \
 	  $(RUN_CMD) \
 	;
