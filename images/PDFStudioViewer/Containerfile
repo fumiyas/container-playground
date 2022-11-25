@@ -22,6 +22,7 @@ RUN \
     libxext6 \
     libxtst6 \
     libxrender1 \
+    libfreetype6 \
   ; \
   if [ ! -s PDFStudioViewer_linux64.sh ]; then \
     curl \
