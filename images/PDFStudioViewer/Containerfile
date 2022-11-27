@@ -23,6 +23,8 @@ RUN \
     libxtst6 \
     libxrender1 \
     libfreetype6 \
+    fontconfig \
+    fonts-droid-fallback \
   ; \
   if [ ! -s PDFStudioViewer_linux64.sh ]; then \
     curl \
