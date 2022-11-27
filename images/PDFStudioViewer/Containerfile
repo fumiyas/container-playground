@@ -42,5 +42,5 @@ RUN \
   ln -s \
     /usr/local/pdfstudioviewer/pdfstudioviewer20?? \
     /usr/local/bin/pdfstudioviewer \
-  ;
+  ; \
   exit 0
