@@ -16,7 +16,8 @@ IMAGE_DEPS=$(INSTALLER)
 
 RUN_DEPS=Xauthority
 
-RUN_DOCKER_OPTS=\
+RUN_CONTAINER_OPTS=\
+	--interactive --tty --rm \
 	--env DISPLAY=$(DISPLAY) \
 	--volume /tmp/.X11-unix/:/tmp/.X11-unix \
 	--volume $(PWD)/Xauthority:/root/.Xauthority:ro \
