@@ -43,6 +43,7 @@ $(XAUTHORITY): Makefile work $(XAUTHORITY_SRC)
 	  touch $(XAUTHORITY) $@.tmp; \
 	  setfacl \
 	    $(shell sed -n "s/^`id -un`:\([0-9]*\):.*/-m u:\1:r--/p" /etc/subuid) \
+	    $(shell sed -n "s/^dockremap:\([0-9]*\):.*/-m u:\1:r--/p" /etc/subuid) \
 	    $@.tmp \
 	  ; \
 	  true
