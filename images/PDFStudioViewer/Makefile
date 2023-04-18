@@ -1,10 +1,8 @@
 IMAGE_NAME=		fumiyas/pdfstudioviewer
 IMAGE_REGISTRY=		FIXME
 
-XAUTHORITY_SRC=		$(HOME)/.Xauthority
-XAUTHORITY=		work/.Xauthority
-
-include ../common/Makefile
+XAUTHORITY=		$(HOME)/.Xauthority
+XAUTHORITY_ONCE=	work/.Xauthority
 
 ## ======================================================================
 
@@ -17,18 +15,25 @@ IMAGE_DEPS=$(INSTALLER)
 
 ## ----------------------------------------------------------------------
 
-RUN_DEPS=work $(XAUTHORITY)
+RUN_DEPS=work xauthority
+
 
 RUN_CONTAINER_OPTS=\
+	--hostname `uname -n` \
 	--interactive --tty --rm \
-	--env DISPLAY=$(DISPLAY) \
+	--env DISPLAY \
 	--env XAUTHORITY=/.Xauthority \
 	--volume /tmp/.X11-unix/:/tmp/.X11-unix \
-	--volume $(PWD)/$(XAUTHORITY):/.Xauthority:ro \
+	--volume $(PWD)/$(XAUTHORITY_ONCE):/.Xauthority:ro \
+	--volume $(PWD)/work:/work \
 	$(NULL)
 RUN_CMD=pdfstudioviewer
 
 ## ======================================================================
+
+include ../common/Makefile
+
+## ----------------------------------------------------------------------
 
 $(INSTALLER):
 	$(CURL_CMD) --remote-name $(INSTALLER_URL)
@@ -36,16 +41,18 @@ $(INSTALLER):
 work:
 	mkdir -p -m 0700 "$@"
 
-$(XAUTHORITY): Makefile work $(XAUTHORITY_SRC)
-	rm -f $@.tmp
-	set -e; \
-	  umask 0077; \
-	  touch $(XAUTHORITY) $@.tmp; \
+.PHONY: xauthority
+xauthority: work
+	@ set -ex; \
+	  xauth="$(XAUTHORITY_ONCE)"; \
+	  xauth_tmp="$$xauth.$$$$.tmp"; \
+	  xauth extract "$$xauth_tmp" "$(DISPLAY)"; \
+	  xauth -f "$$xauth_tmp" generate "$(DISPLAY)" . trusted timeout 30; \
 	  setfacl \
-	    $(shell sed -n "s/^`id -un`:\([0-9]*\):.*/-m u:\1:r--/p" /etc/subuid) \
-	    $(shell sed -n "s/^dockremap:\([0-9]*\):.*/-m u:\1:r--/p" /etc/subuid) \
-	    $@.tmp \
+	    -m u:0:rw \
+	    $(shell sed -n "s/^`id -un`:\([0-9]*\):.*/-m u:\1:rw/p" /etc/subuid) \
+	    $(shell sed -n "s/^dockremap:\([0-9]*\):.*/-m u:\1:rw/p" /etc/subuid) \
+	    "$$xauth_tmp" \
 	  ; \
+	  mv "$$xauth_tmp" "$$xauth"; \
 	  true
-	cp $(XAUTHORITY_SRC) $@.tmp
-	mv $@.tmp $@
