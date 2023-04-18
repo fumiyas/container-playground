@@ -56,8 +56,8 @@ CURL_CMD=		$(CURL) $(CURL_OPTS)
 
 ## ----------------------------------------------------------------------
 
-RUN_CONTAINER_OPTS=	--interactive --tty --rm
-RUN_CMD=		bash
+RUN_CONTAINER_OPTS?=	--interactive --tty --rm
+RUN_CMD?=		bash
 
 ## ======================================================================
 
