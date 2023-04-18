@@ -61,26 +61,26 @@ RUN_CMD=		bash
 
 ## ======================================================================
 
-.POHNY: default
+.PHONY: default
 default: help
 
-.POHNY: help
+.PHONY: help
 help:
 	@ echo 'Usage: $(MAKE) <image|run>'
 
-.POHNY: clean
+.PHONY: clean
 clean:
 	$(RM) *.tmp $(IMAGE_DEPS) $(RUN_DEPS)
 
-.POHNY: image
+.PHONY: image
 image: $(IMAGE_DEPS)
 	$(C_BUILDER_BUILD_CMD) --tag $(IMAGE_NAME) .
 
-.POHNY: push
+.PHONY: push
 push:
 	$(C_BUILDER_PUSH_CMD) $(IMAGE_NAME)
 
-.POHNY: run
+.PHONY: run
 run: $(RUN_DEPS)
 	$(C_MANAGER_RUN_CMD) \
 	  $(RUN_CONTAINER_OPTS) \
