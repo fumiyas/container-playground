@@ -21,7 +21,9 @@ RUN_DEPS=work xauthority
 RUN_CONTAINER_OPTS=\
 	--hostname `uname -n` \
 	--interactive --tty --rm \
+	--env LANG=C.UTF-8 \
 	--env DISPLAY \
+	--env XMODIFIERS \
 	--env XAUTHORITY=/.Xauthority \
 	--volume /tmp/.X11-unix/:/tmp/.X11-unix \
 	--volume $(PWD)/$(XAUTHORITY_ONCE):/.Xauthority:ro \
