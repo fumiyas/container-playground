@@ -8,6 +8,7 @@ FROM ${from} AS apt-cache
 
 LABEL maintainer="SATOH Fumiyasu"
 
+ENV LANG=C.UTF-8
 ENV DEBIAN_FRONTEND="noninteractive"
 
 COPY PDFStudioViewer_linux64.sh .
@@ -34,7 +35,7 @@ RUN \
       https://download.qoppa.com/pdfstudioviewer/PDFStudioViewer_linux64.sh \
     ; \
   fi; \
-  LANG=C.UTF-8 sh /PDFStudioViewer_linux64.sh \
+  sh /PDFStudioViewer_linux64.sh \
     -q \
     -c \
     -dir /usr/local/pdfstudioviewer \
