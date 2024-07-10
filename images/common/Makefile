@@ -84,6 +84,7 @@ push:
 .PHONY: run
 run: $(RUN_DEPS)
 	$(C_MANAGER_RUN_CMD) \
+	  $(C_MANAGER_RUN_OPTS) \
 	  $(RUN_CONTAINER_OPTS) \
 	  $(IMAGE_NAME) \
 	  $(RUN_CMD) \
