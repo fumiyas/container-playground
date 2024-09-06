@@ -9,7 +9,7 @@ BUILDAH=		buildah
 
 ## ======================================================================
 
-C_MANAGER=		$(DOCKER)
+C_MANAGER=		$(shell command -v $(PODMAN) || command -v $(DOCKER))
 C_MANAGER_ENV=
 C_MANAGER_OPTS=
 C_MANAGER_CMD=		$(C_MANAGER_X_ENV) $(C_MANAGER_ENV) $(C_MANAGER) $(C_MANAGER_X_OPTS) $(C_MANAGER_OPTS)
