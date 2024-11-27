@@ -1,4 +1,5 @@
 # syntax=docker.io/docker/dockerfile:1
+# -*- coding: utf-8 -*- vim:shiftwidth=2:expandtab:
 
 ARG from="docker.io/debian:bullseye-slim"
 
@@ -13,9 +14,9 @@ ENV DEBIAN_FRONTEND="noninteractive"
 
 COPY PDFStudioViewer_linux64.sh .
 
-RUN \
-  set -ex; \
-  apt-get update; \
+RUN <<EOF
+  set -ex
+  apt-get update
   apt-get install --yes --quiet --no-install-recommends \
     ca-certificates \
     curl \
@@ -26,22 +27,22 @@ RUN \
     libfreetype6 \
     fontconfig \
     fonts-droid-fallback \
-  ; \
-  if [ ! -s PDFStudioViewer_linux64.sh ]; then \
+  ;
+  if [ ! -s PDFStudioViewer_linux64.sh ]; then
     curl \
       --silent \
       --show-error \
       --remote-name \
       https://download.qoppa.com/pdfstudioviewer/PDFStudioViewer_linux64.sh \
-    ; \
-  fi; \
+    ;
+  fi
   sh /PDFStudioViewer_linux64.sh \
     -q \
     -c \
     -dir /usr/local/pdfstudioviewer \
-  ; \
+  ;
   ln -s \
     /usr/local/pdfstudioviewer/pdfstudioviewer20?? \
     /usr/local/bin/pdfstudioviewer \
-  ; \
-  exit 0
+  ;
+EOF
