@@ -1,7 +1,9 @@
 IMAGE_NAME=		fumiyas/pdfstudioviewer
 IMAGE_REGISTRY=		FIXME
 
+ifndef XAUTHORITY
 XAUTHORITY=		$(HOME)/.Xauthority
+endif
 XAUTHORITY_ONCE=	work/.Xauthority
 
 ## ======================================================================
@@ -55,7 +57,7 @@ xauthority: work
 	@ set -ex; \
 	  xauth="$(XAUTHORITY_ONCE)"; \
 	  xauth_tmp="$$xauth.$$$$.tmp"; \
-	  xauth extract "$$xauth_tmp" "$(DISPLAY)"; \
+	  xauth -f "$(XAUTHORITY)" extract "$$xauth_tmp" "$(DISPLAY)"; \
 	  xauth -f "$$xauth_tmp" generate "$(DISPLAY)" . trusted timeout 30; \
 	  setfacl \
 	    -m user:0:rw \
