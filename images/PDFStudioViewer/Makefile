@@ -37,7 +37,7 @@ RUN_CMD=pdfstudioviewer
 
 -include ./Makefile.local
 
-include ../common/Makefile
+include ../common/Makefile.container
 
 ## ----------------------------------------------------------------------
 
