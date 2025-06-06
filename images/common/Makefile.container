@@ -12,46 +12,52 @@ ROOTLESSKIT?=		rootlesskit
 C_MANAGER?=		$(shell command -v $(PODMAN) || command -v $(DOCKER))
 C_MANAGER_ENV?=
 C_MANAGER_OPTS?=
-C_MANAGER_CMD?=		$(C_MANAGER_X_ENV) $(C_MANAGER_ENV) $(C_MANAGER) $(C_MANAGER_X_OPTS) $(C_MANAGER_OPTS)
+C_MANAGER_CMD?=		$(_C_MANAGER_ENV) $(C_MANAGER_ENV) $(C_MANAGER) $(_C_MANAGER_OPTS) $(C_MANAGER_OPTS)
 
 C_MANAGER_RUN_ENV?=
 C_MANAGER_RUN_OPTS?=
-C_MANAGER_RUN_CMD?=	$(C_MANAGER_X_RUN_ENV) $(C_MANAGER_RUN_ENV) $(C_MANAGER_CMD) run $(C_MANAGER_RUN_X_OPTS) $(C_MANAGER_RUN_OPTS)
+C_MANAGER_RUN_CMD?=	$(_C_MANAGER_RUN_ENV) $(C_MANAGER_RUN_ENV) $(C_MANAGER_CMD) run $(_C_MANAGER_RUN_OPTS) $(C_MANAGER_RUN_OPTS)
+
+## ----------------------------------------------------------------------
+
+C_UNSHARE_ENV?=
+C_UNSHARE_OPTS?=
+C_UNSHARE_CMD?=		$(_C_UNSHARE_ENV) $(C_UNSHARE_ENV) $(C_UNSHARE) $(_C_UNSHARE_OPTS) $(C_UNSHARE_OPTS)
 
 ## ----------------------------------------------------------------------
 
 C_BUILDER_ENV?=
 C_BUILDER_OPTS?=
-C_BUILDER_CMD?=		$(C_BUILDER_X_ENV) $(C_BUILDER_ENV) $(C_BUILDER) $(C_BUILDER_X_OPTS) $(C_BUILDER_OPTS)
+C_BUILDER_CMD?=		$(_C_BUILDER_ENV) $(C_BUILDER_ENV) $(C_BUILDER) $(_C_BUILDER_OPTS) $(C_BUILDER_OPTS)
 
 C_BUILDER_BUILD_ENV?=
 C_BUILDER_BUILD_OPTS?=
-C_BUILDER_BUILD_CMD?=	$(C_BUILDER_BUILD_X_ENV) $(C_BUILDER_BUILD_ENV) $(C_BUILDER_CMD) build --file $(CONTAINERFILE) $(C_BUILDER_BUILD_X_OPTS) $(C_BUILDER_BUILD_OPTS)
+C_BUILDER_BUILD_CMD?=	$(_C_BUILDER_BUILD_ENV) $(C_BUILDER_BUILD_ENV) $(C_BUILDER_CMD) build --file $(CONTAINERFILE) $(_C_BUILDER_BUILD_OPTS) $(C_BUILDER_BUILD_OPTS)
 
 C_BUILDER_PUSH_ENV?=
 C_BUILDER_PUSH_OPTS?=
-C_BUILDER_PUSH_CMD?=	$(C_BUILDER_PUSH_X_ENV) $(C_BUILDER_PUSH_ENV) $(C_BUILDER_CMD) push $(C_BUILDER_PUSH_X_OPTS) $(C_BUILDER_PUSH_OPTS)
+C_BUILDER_PUSH_CMD?=	$(_C_BUILDER_PUSH_ENV) $(C_BUILDER_PUSH_ENV) $(C_BUILDER_CMD) push $(_C_BUILDER_PUSH_OPTS) $(C_BUILDER_PUSH_OPTS)
 
 ## ----------------------------------------------------------------------
 
 ifneq (,$(findstring docker,$(C_MANAGER)))
+C_UNSHARE?=		$(shell command -v $(ROOTLESSKIT) || echo $(ROOTLESSKIT))
 C_BUILDER?=		$(C_MANAGER)
-C_UNSHARE?=		$(ROOTLESSKIT)
 endif
 
 ifneq (,$(findstring podman,$(C_MANAGER)))
-C_BUILDER?=		$(BUILDAH)
-C_UNSHARE?=		$(BUILDAH) unshare
+C_UNSHARE?=		$(C_MANAGER) unshare
+C_BUILDER?=		$(shell command -v $(BUILDAH) || echo $(BUILDAH))
 endif
 
 ifneq (,$(findstring docker,$(C_BUILDER)))
-C_BUILDER_X_ENV?=	DOCKER_BUILDKIT=$(DOCKER_BUILDKIT)
-C_BUILDER_BUILD_X_OPTS?=--progress=plain
+_C_BUILDER_ENV?=	DOCKER_BUILDKIT=$(DOCKER_BUILDKIT)
+_C_BUILDER_BUILD_OPTS?=	--progress=plain
 endif
 
 ## ----------------------------------------------------------------------
 
-CURL?=			curl
+CURL?=			$(shell command -v curl || echo curl)
 CURL_OPTS?=		--xattr
 CURL_CMD?=		$(CURL) $(CURL_OPTS)
 
@@ -85,11 +91,12 @@ status:
 		C_MANAGER "$(strip $(C_MANAGER))" \
 		C_MANAGER_CMD "$(strip $(C_MANAGER_CMD))" \
 		C_MANAGER_RUN_CMD "$(strip $(C_MANAGER_RUN_CMD))" \
+		C_UNSHARE "$(strip $(C_UNSHARE))" \
+		C_UNSHARE_CMD "$(strip $(C_UNSHARE_CMD))" \
 		C_BUILDER "$(strip $(C_BUILDER))" \
 		C_BUILDER_CMD "$(strip $(C_BUILDER_CMD))" \
 		C_BUILDER_BUILD_CMD "$(strip $(C_BUILDER_BUILD_CMD))" \
 		C_BUILDER_PUSH_CMD "$(strip $(C_BUILDER_PUSH_CMD))" \
-		C_UNSHARE "$(strip $(C_UNSHARE))" \
 		CURL "$(strip $(CURL))" \
 		CURL_CMD "$(strip $(CURL_CMD))" \
 		IMAGE_NAME "$(strip $(IMAGE_NAME))" \
