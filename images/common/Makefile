@@ -67,11 +67,26 @@ default: help
 
 .PHONY: help
 help:
-	@ echo 'Usage: $(MAKE) <image|run>'
+	@ echo 'Usage: $(MAKE) <status|image|run>'
 
 .PHONY: clean
 clean:
 	$(RM) *.tmp $(IMAGE_DEPS) $(RUN_DEPS)
+
+.PHONY: status
+status:
+	@ printf '%-20s %s\n' \
+		C_MANAGER "$(strip $(C_MANAGER))" \
+		C_MANAGER_CMD "$(strip $(C_MANAGER_CMD))" \
+		C_MANAGER_RUN_CMD "$(strip $(C_MANAGER_RUN_CMD))" \
+		C_BUILDER "$(strip $(C_BUILDER))" \
+		C_BUILDER_CMD "$(strip $(C_BUILDER_CMD))" \
+		C_BUILDER_BUILD_CMD "$(strip $(C_BUILDER_BUILD_CMD))" \
+		C_BUILDER_PUSH_CMD "$(strip $(C_BUILDER_PUSH_CMD))" \
+		C_UNSHARE "$(strip $(C_UNSHARE))" \
+		CURL "$(strip $(CURL))" \
+		CURL_CMD "$(strip $(CURL_CMD))" \
+	;
 
 .PHONY: image
 image: $(IMAGE_DEPS)
