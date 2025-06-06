@@ -1,11 +1,11 @@
 CONTAINERFILE?=		Containerfile
 
+PODMAN?=		podman
+BUILDAH?=		buildah
+
 DOCKER?=		docker
 DOCKER_BUILDKIT?=	1
 ROOTLESSKIT?=		rootlesskit
-
-PODMAN?=		podman
-BUILDAH?=		buildah
 
 ## ======================================================================
 
