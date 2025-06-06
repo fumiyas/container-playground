@@ -30,7 +30,7 @@ RUN_CONTAINER_OPTS=\
 	--volume /tmp/.X11-unix/:/tmp/.X11-unix \
 	--volume $(PWD)/$(XAUTHORITY_ONCE):/.Xauthority:ro \
 	--volume $(PWD)/work:/work \
-	$(NULL)
+	$(NIL)
 RUN_CMD=pdfstudioviewer
 
 ## ======================================================================
