@@ -92,6 +92,10 @@ status:
 		C_UNSHARE "$(strip $(C_UNSHARE))" \
 		CURL "$(strip $(CURL))" \
 		CURL_CMD "$(strip $(CURL_CMD))" \
+		IMAGE_NAME "$(strip $(IMAGE_NAME))" \
+		IMAGE_DEPS "$(strip $(IMAGE_DEPS))" \
+		RUN_CMD "$(strip $(RUN_CMD))" \
+		RUN_DEPS "$(strip $(RUN_DEPS))" \
 	;
 
 .PHONY: image
