@@ -9,7 +9,7 @@ ROOTLESSKIT?=		rootlesskit
 
 ## ======================================================================
 
-C_MANAGER?=		$(shell command -v $(PODMAN) || command -v $(DOCKER))
+C_MANAGER?=		$(shell command -v $(PODMAN) || command -v $(DOCKER) || { echo "C_MANAGER command not found"; exit 1; })
 C_MANAGER_ENV?=
 C_MANAGER_OPTS?=
 C_MANAGER_CMD?=		$(_C_MANAGER_ENV) $(C_MANAGER_ENV) $(C_MANAGER) $(_C_MANAGER_OPTS) $(C_MANAGER_OPTS)
@@ -40,14 +40,14 @@ C_BUILDER_PUSH_CMD?=	$(_C_BUILDER_PUSH_ENV) $(C_BUILDER_PUSH_ENV) $(C_BUILDER_CM
 
 ## ----------------------------------------------------------------------
 
-ifneq (,$(findstring docker,$(C_MANAGER)))
-C_UNSHARE?=		$(shell command -v $(ROOTLESSKIT) || echo $(ROOTLESSKIT))
-C_BUILDER?=		$(C_MANAGER)
-endif
-
 ifneq (,$(findstring podman,$(C_MANAGER)))
 C_UNSHARE?=		$(C_MANAGER) unshare
-C_BUILDER?=		$(shell command -v $(BUILDAH) || echo $(BUILDAH))
+C_BUILDER?=		$(shell command -v $(BUILDAH) || echo $(BUILDAH) || { echo "C_BUILDER command not found"; exit 1; })
+endif
+
+ifneq (,$(findstring docker,$(C_MANAGER)))
+C_UNSHARE?=		$(shell command -v $(ROOTLESSKIT) || echo $(ROOTLESSKIT) || { echo "C_UNSHARE command not found"; exit 1; })
+C_BUILDER?=		$(C_MANAGER)
 endif
 
 ifneq (,$(findstring docker,$(C_BUILDER)))
