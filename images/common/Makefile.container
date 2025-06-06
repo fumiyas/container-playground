@@ -57,12 +57,6 @@ endif
 
 ## ----------------------------------------------------------------------
 
-CURL?=			$(shell command -v curl || echo curl)
-CURL_OPTS?=		--xattr
-CURL_CMD?=		$(CURL) $(CURL_OPTS)
-
-## ----------------------------------------------------------------------
-
 RUN_CONTAINER_OPTS?=	--interactive --tty --rm
 RUN_CMD?=		bash
 
@@ -97,8 +91,6 @@ status:
 		C_BUILDER_CMD "$(strip $(C_BUILDER_CMD))" \
 		C_BUILDER_BUILD_CMD "$(strip $(C_BUILDER_BUILD_CMD))" \
 		C_BUILDER_PUSH_CMD "$(strip $(C_BUILDER_PUSH_CMD))" \
-		CURL "$(strip $(CURL))" \
-		CURL_CMD "$(strip $(CURL_CMD))" \
 		IMAGE_NAME "$(strip $(IMAGE_NAME))" \
 		IMAGE_DEPS "$(strip $(IMAGE_DEPS))" \
 		RUN_CMD "$(strip $(RUN_CMD))" \

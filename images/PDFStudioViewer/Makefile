@@ -13,6 +13,12 @@ INSTALLER_URL=https://download.qoppa.com/pdfstudioviewer/$(INSTALLER)
 
 ## ----------------------------------------------------------------------
 
+CURL?=			$(shell command -v curl || echo curl)
+CURL_OPTS?=		--xattr
+CURL_CMD?=		$(CURL) $(CURL_OPTS)
+
+## ----------------------------------------------------------------------
+
 IMAGE_DEPS=$(INSTALLER)
 
 ## ----------------------------------------------------------------------
