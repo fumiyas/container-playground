@@ -1,0 +1,9 @@
+IMAGE_NAME=		alice/devenv
+IMAGE_REGISTRY=		FIXME
+
+#CONTAINERFILE=		Dockerfile
+#C_MANAGER=		docker
+
+-include ./Makefile.local
+
+include ../common/Makefile.container
