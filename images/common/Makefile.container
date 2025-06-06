@@ -1,4 +1,7 @@
-CONTAINERFILE?=		Containerfile
+CONTAINERFILE?=		$(shell { ls -d Containerfile Dockerfile 2>/dev/null; echo Containerfile; }|head -n1)
+
+IMAGE_NAME?=		$(error Set IMAGE_NAME in your Makefile)
+RUN_CMD?=		$(error Set RUN_CMD in your Makefile)
 
 PODMAN?=		podman
 BUILDAH?=		buildah
@@ -15,7 +18,7 @@ C_MANAGER_OPTS?=
 C_MANAGER_CMD?=		$(_C_MANAGER_ENV) $(C_MANAGER_ENV) $(C_MANAGER) $(_C_MANAGER_OPTS) $(C_MANAGER_OPTS)
 
 C_MANAGER_RUN_ENV?=
-C_MANAGER_RUN_OPTS?=
+C_MANAGER_RUN_OPTS?=	--interactive --tty --rm
 C_MANAGER_RUN_CMD?=	$(_C_MANAGER_RUN_ENV) $(C_MANAGER_RUN_ENV) $(C_MANAGER_CMD) run $(_C_MANAGER_RUN_OPTS) $(C_MANAGER_RUN_OPTS)
 
 ## ----------------------------------------------------------------------
@@ -53,17 +56,6 @@ endif
 ifneq (,$(findstring docker,$(C_BUILDER)))
 _C_BUILDER_ENV?=	DOCKER_BUILDKIT=$(DOCKER_BUILDKIT)
 _C_BUILDER_BUILD_OPTS?=	--progress=plain
-endif
-
-## ----------------------------------------------------------------------
-
-RUN_CONTAINER_OPTS?=	--interactive --tty --rm
-RUN_CMD?=		bash
-
-## ----------------------------------------------------------------------
-
-ifndef IMAGE_NAME
-  $(error IMAGE_NAME is not set)
 endif
 
 ## ======================================================================
@@ -108,8 +100,6 @@ push:
 .PHONY: run
 run: $(RUN_DEPS)
 	$(C_MANAGER_RUN_CMD) \
-	  $(C_MANAGER_RUN_OPTS) \
-	  $(RUN_CONTAINER_OPTS) \
 	  $(IMAGE_NAME) \
 	  $(RUN_CMD) \
 	;
