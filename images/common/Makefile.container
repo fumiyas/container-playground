@@ -35,7 +35,7 @@ C_BUILDER_CMD?=		$(_C_BUILDER_ENV) $(C_BUILDER_ENV) $(C_BUILDER) $(_C_BUILDER_OP
 
 C_BUILDER_BUILD_ENV?=
 C_BUILDER_BUILD_OPTS?=
-C_BUILDER_BUILD_CMD?=	$(_C_BUILDER_BUILD_ENV) $(C_BUILDER_BUILD_ENV) $(C_BUILDER_CMD) build --file $(CONTAINERFILE) $(_C_BUILDER_BUILD_OPTS) $(C_BUILDER_BUILD_OPTS)
+C_BUILDER_BUILD_CMD?=	$(_C_BUILDER_BUILD_ENV) $(C_BUILDER_BUILD_ENV) $(C_BUILDER_CMD) $(C_BUILDER_BUILD_SUBCMD) --file $(CONTAINERFILE) $(_C_BUILDER_BUILD_OPTS) $(C_BUILDER_BUILD_OPTS)
 
 C_BUILDER_PUSH_ENV?=
 C_BUILDER_PUSH_OPTS?=
@@ -46,11 +46,13 @@ C_BUILDER_PUSH_CMD?=	$(_C_BUILDER_PUSH_ENV) $(C_BUILDER_PUSH_ENV) $(C_BUILDER_CM
 ifneq (,$(findstring podman,$(C_MANAGER)))
 C_UNSHARE?=		$(C_MANAGER) unshare
 C_BUILDER?=		$(shell command -v $(BUILDAH) || echo $(BUILDAH) || { echo "C_BUILDER command not found"; exit 1; })
+C_BUILDER_BUILD_SUBCMD?=build
 endif
 
 ifneq (,$(findstring docker,$(C_MANAGER)))
 C_UNSHARE?=		$(shell command -v $(ROOTLESSKIT) || echo $(ROOTLESSKIT) || { echo "C_UNSHARE command not found"; exit 1; })
 C_BUILDER?=		$(C_MANAGER)
+C_BUILDER_BUILD_SUBCMD?=buildx
 endif
 
 ifneq (,$(findstring docker,$(C_BUILDER)))
