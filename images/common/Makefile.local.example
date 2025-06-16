@@ -1,0 +1,6 @@
+C_MANAGER=		podman
+#C_MANAGER=		docker
+
+IMAGE_PLATFORM=		linux/amd64,linux/arm64
+
+RUN_CMD=		/app/bin/server start
