@@ -75,10 +75,17 @@ endif
 
 ifneq (,$(findstring docker,$(C_BUILDER)))
 _C_BUILDER_ENV=		DOCKER_BUILDKIT=$(DOCKER_BUILDKIT)
-_C_BUILDER_BUILD_OPTS=	--progress=plain
+_C_BUILDER_BUILD_OPTS=	--progress plain
 endif
 
-_C_BUILDER_BUILD_OPTS+=	--file $(CONTAINERFILE) --platform=$(IMAGE_PLATFORM)
+_C_BUILDER_BUILD_OPTS+=	--file $(CONTAINERFILE) --platform $(IMAGE_PLATFORM)
+
+ifneq (,$(IMAGE_BUILD_DATE))
+_C_BUILDER_BUILD_OPTS+=	--build-arg BUILD_DATE=$(IMAGE_BUILD_DATE)
+endif
+ifneq (,$(IMAGE_BUILD_VCS_REF))
+_C_BUILDER_BUILD_OPTS+=	--build-arg VCS_REF=$(IMAGE_BUILD_VCS_REF)
+endif
 
 ## ======================================================================
 
