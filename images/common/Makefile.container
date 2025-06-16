@@ -4,7 +4,6 @@ IMAGE_NAME?=		$(error Set IMAGE_NAME in your Makefile)
 RUN_CMD?=		$(error Set RUN_CMD in your Makefile)
 
 PODMAN?=		podman
-BUILDAH?=		buildah
 
 DOCKER?=		docker
 DOCKER_BUILDKIT?=	1
@@ -45,7 +44,7 @@ C_BUILDER_PUSH_CMD?=	$(_C_BUILDER_PUSH_ENV) $(C_BUILDER_PUSH_ENV) $(C_BUILDER_CM
 
 ifneq (,$(findstring podman,$(C_MANAGER)))
 C_UNSHARE?=		$(C_MANAGER) unshare
-C_BUILDER?=		$(shell command -v $(BUILDAH) || echo $(BUILDAH) || { echo "C_BUILDER command not found"; exit 1; })
+C_BUILDER?=		$(C_MANAGER) buildx
 C_BUILDER_BUILD_SUBCMD?=build
 endif
 
