@@ -1,0 +1,21 @@
+PODMAN?=		podman
+
+## ======================================================================
+
+C_MANAGER?=$(shell \
+	command -v $(PODMAN) && exit 0; \
+	echo "$(PODMAN) command not found"; \
+	exit 1; \
+)
+
+## ----------------------------------------------------------------------
+
+C_BUILDER?=		$(C_MANAGER)
+
+_C_BUILDER_ENV=	
+
+_C_BUILDER_BUILD_OPTS=	--tag $(IMAGE_NAME)
+
+## ----------------------------------------------------------------------
+
+C_UNSHARE?=		$(C_MANAGER) unshare

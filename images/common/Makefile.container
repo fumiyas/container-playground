@@ -1,14 +1,9 @@
-CONTAINERFILE?=		$(shell { ls -d Containerfile Dockerfile 2>/dev/null; echo Containerfile; }|head -n1)
+PODMAN?=		podman
+DOCKER?=		docker
 
 ARCH=			$(shell uname -m)
 
-PODMAN?=		podman
-
-DOCKER?=		docker
-DOCKER_BUILDKIT?=	1
-ROOTLESSKIT?=		rootlesskit
-
-## ----------------------------------------------------------------------
+## ======================================================================
 
 IMAGE_NAME?=		$(error Set IMAGE_NAME in your Makefile)
 
@@ -24,13 +19,40 @@ IMAGE_PLATFORM_ARCH?=	$(ARCH)
 
 IMAGE_PLATFORM?=	$(IMAGE_PLATFORM_OS)/$(IMAGE_PLATFORM_ARCH)
 
-## ----------------------------------------------------------------------
+## ======================================================================
 
-RUN_CMD?=		$(error Set RUN_CMD in your Makefile)
+C_MANAGERS?=		$(PODMAN) $(DOCKER)
+C_FILES?=		Containerfile Dockerfile
+
+ifndef C_MANAGER
+C_MANAGER:=$(shell \
+	for c in $(C_MANAGERS); do \
+		command -v "$$c" && exit 0; \
+	done; \
+	echo "No container manager found: $(C_MANAGERS)"; \
+	exit 1; \
+)
+endif
+
+ifndef C_FILE
+C_FILE=$(shell \
+	for f in $(C_FILES); do \
+		if [ -s "$$f" ]; then \
+			echo "$$f"; \
+			exit 0; \
+		fi; \
+	done; \
+	echo "No container file found: $(C_FILES)"; \
+	exit 1; \
+)
+endif
 
 ## ======================================================================
 
-C_MANAGER?=		$(shell command -v $(PODMAN) || command -v $(DOCKER) || { echo "C_MANAGER command not found"; exit 1; })
+include $(dir $(lastword $(MAKEFILE_LIST)))/Makefile.$(notdir $(C_MANAGER))
+
+## ======================================================================
+
 C_MANAGER_ENV?=
 C_MANAGER_OPTS?=
 C_MANAGER_CMD?=		$(_C_MANAGER_ENV) $(C_MANAGER_ENV) $(C_MANAGER) $(_C_MANAGER_OPTS) $(C_MANAGER_OPTS)
@@ -61,25 +83,7 @@ C_BUILDER_PUSH_CMD?=	$(_C_BUILDER_PUSH_ENV) $(C_BUILDER_PUSH_ENV) $(C_BUILDER_CM
 
 ## ----------------------------------------------------------------------
 
-ifneq (,$(findstring podman,$(C_MANAGER)))
-C_UNSHARE?=		$(C_MANAGER) unshare
-C_BUILDER?=		$(C_MANAGER) buildx
-C_BUILDER_BUILD_SUBCMD?=build
-endif
-
-ifneq (,$(findstring docker,$(C_MANAGER)))
-C_UNSHARE?=		$(shell command -v $(ROOTLESSKIT) || echo $(ROOTLESSKIT) || { echo "C_UNSHARE command not found"; exit 1; })
-C_BUILDER?=		$(C_MANAGER) buildx
-C_BUILDER_BUILD_SUBCMD?=build
-endif
-
-ifneq (,$(findstring docker,$(C_BUILDER)))
-_C_BUILDER_ENV=		DOCKER_BUILDKIT=$(DOCKER_BUILDKIT)
-_C_BUILDER_BUILD_OPTS=	--progress plain
-endif
-
-_C_BUILDER_BUILD_OPTS+=	--file $(CONTAINERFILE) --platform $(IMAGE_PLATFORM)
-
+_C_BUILDER_BUILD_OPTS+=	--file $(C_FILE) --platform $(IMAGE_PLATFORM)
 ifneq (,$(IMAGE_BUILD_DATE))
 _C_BUILDER_BUILD_OPTS+=	--build-arg BUILD_DATE=$(IMAGE_BUILD_DATE)
 endif

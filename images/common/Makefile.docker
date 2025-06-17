@@ -1,0 +1,25 @@
+DOCKER?=		docker
+DOCKER_BUILDKIT?=	1
+ROOTLESSKIT?=		rootlesskit
+
+## ======================================================================
+
+C_MANAGER?=$(shell \
+	command -v $(DOCKER) && exit 0; \
+	echo "$(DOCKER) command not found"; \
+	exit 1; \
+)
+
+## ----------------------------------------------------------------------
+
+C_BUILDER?=		$(C_MANAGER) buildx
+
+_C_BUILDER_ENV=		DOCKER_BUILDKIT=$(DOCKER_BUILDKIT)
+
+_C_BUILDER_BUILD_OPTS=	--tag $(IMAGE_NAME) --progress plain
+
+## ----------------------------------------------------------------------
+
+C_UNSHARE?=$(shell \
+	command -v $(ROOTLESSKIT) || echo $(ROOTLESSKIT) \
+)
