@@ -157,7 +157,7 @@ show-env:
 
 .PHONY: image
 image: $(IMAGE_DEPS)
-	$(C_BUILDER_BUILD_CMD) --tag $(IMAGE_NAME) .
+	$(C_BUILDER_BUILD_CMD) .
 
 .PHONY: push
 push:
