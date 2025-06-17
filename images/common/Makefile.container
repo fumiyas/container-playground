@@ -55,33 +55,43 @@ include $(dir $(lastword $(MAKEFILE_LIST)))/Makefile.$(notdir $(C_MANAGER))
 
 C_MANAGER_ENV?=
 C_MANAGER_OPTS?=
-C_MANAGER_CMD?=		$(_C_MANAGER_ENV) $(C_MANAGER_ENV) $(C_MANAGER) $(_C_MANAGER_OPTS) $(C_MANAGER_OPTS)
+C_MANAGER_CMD?=$(strip \
+	$(_C_MANAGER_ENV) $(C_MANAGER_ENV) \
+	$(C_MANAGER) \
+	$(_C_MANAGER_OPTS) $(C_MANAGER_OPTS) \
+)
 
 C_MANAGER_RUN_ENV?=
 C_MANAGER_RUN_OPTS?=	--interactive --tty --rm
-C_MANAGER_RUN_CMD?=	$(_C_MANAGER_RUN_ENV) $(C_MANAGER_RUN_ENV) $(C_MANAGER_CMD) run $(_C_MANAGER_RUN_OPTS) $(C_MANAGER_RUN_OPTS)
-
-## ----------------------------------------------------------------------
-
-C_UNSHARE_ENV?=
-C_UNSHARE_OPTS?=
-C_UNSHARE_CMD?=		$(_C_UNSHARE_ENV) $(C_UNSHARE_ENV) $(C_UNSHARE) $(_C_UNSHARE_OPTS) $(C_UNSHARE_OPTS)
+C_MANAGER_RUN_CMD?=$(strip \
+	$(_C_MANAGER_RUN_ENV) $(C_MANAGER_RUN_ENV) \
+	$(C_MANAGER_CMD) \
+	run \
+	$(_C_MANAGER_RUN_OPTS) $(C_MANAGER_RUN_OPTS) \
+)
 
 ## ----------------------------------------------------------------------
 
 C_BUILDER_ENV?=
 C_BUILDER_OPTS?=
-C_BUILDER_CMD?=		$(_C_BUILDER_ENV) $(C_BUILDER_ENV) $(C_BUILDER) $(_C_BUILDER_OPTS) $(C_BUILDER_OPTS)
+C_BUILDER_CMD?=$(strip \
+	$(_C_BUILDER_ENV) $(C_BUILDER_ENV) \
+	$(C_BUILDER) \
+	$(_C_BUILDER_OPTS) $(C_BUILDER_OPTS) \
+)
+
+## ----------------------------------------------------------------------
 
 C_BUILDER_BUILD_ENV?=
 C_BUILDER_BUILD_OPTS?=
-C_BUILDER_BUILD_CMD?=	$(_C_BUILDER_BUILD_ENV) $(C_BUILDER_BUILD_ENV) $(C_BUILDER_CMD) $(C_BUILDER_BUILD_SUBCMD) $(_C_BUILDER_BUILD_OPTS) $(C_BUILDER_BUILD_OPTS)
-
-C_BUILDER_PUSH_ENV?=
-C_BUILDER_PUSH_OPTS?=
-C_BUILDER_PUSH_CMD?=	$(_C_BUILDER_PUSH_ENV) $(C_BUILDER_PUSH_ENV) $(C_BUILDER_CMD) push $(_C_BUILDER_PUSH_OPTS) $(C_BUILDER_PUSH_OPTS)
-
-## ----------------------------------------------------------------------
+C_BUILDER_BUILD_CMD?= $(strip \
+	$(_C_BUILDER_BUILD_ENV) \
+	$(C_BUILDER_BUILD_ENV) \
+	$(C_BUILDER_CMD) \
+	build \
+	$(_C_BUILDER_BUILD_OPTS) \
+	$(C_BUILDER_BUILD_OPTS) \
+)
 
 _C_BUILDER_BUILD_OPTS+=	--file $(C_FILE) --platform $(IMAGE_PLATFORM)
 ifneq (,$(IMAGE_BUILD_DATE))
@@ -90,6 +100,27 @@ endif
 ifneq (,$(IMAGE_BUILD_VCS_REF))
 _C_BUILDER_BUILD_OPTS+=	--build-arg VCS_REF=$(IMAGE_BUILD_VCS_REF)
 endif
+
+## ----------------------------------------------------------------------
+
+C_BUILDER_PUSH_ENV?=
+C_BUILDER_PUSH_OPTS?=
+C_BUILDER_PUSH_CMD?=$(strip \
+	$(_C_BUILDER_PUSH_ENV) $(C_BUILDER_PUSH_ENV) \
+	$(C_BUILDER_CMD) \
+	push \
+	$(_C_BUILDER_PUSH_OPTS) $(C_BUILDER_PUSH_OPTS) \
+)
+
+## ----------------------------------------------------------------------
+
+C_UNSHARE_ENV?=
+C_UNSHARE_OPTS?=
+C_UNSHARE_CMD?=$(strip \
+	$(_C_UNSHARE_ENV) $(C_UNSHARE_ENV) \
+	$(C_UNSHARE) \
+	$(_C_UNSHARE_OPTS) $(C_UNSHARE_OPTS) \
+)
 
 ## ======================================================================
 
