@@ -7,6 +7,8 @@ ARCH=			$(shell uname -m)
 
 IMAGE_NAME?=		$(error Set IMAGE_NAME in your Makefile)
 
+IMAGE_CONTEXT?=		.
+
 IMAGE_PLATFORM_OS?=	linux
 
 ifeq ($(ARCH),x86_64)
@@ -149,6 +151,7 @@ show-env:
 		C_BUILDER_PUSH_CMD "$(strip $(C_BUILDER_PUSH_CMD))" \
 		C_FILE "$(strip $(C_FILE))" \
 		IMAGE_NAME "$(strip $(IMAGE_NAME))" \
+		IMAGE_CONTEXT "$(strip $(IMAGE_CONTEXT))" \
 		IMAGE_PLATFORM "$(strip $(IMAGE_PLATFORM))" \
 		IMAGE_DEPS "$(strip $(IMAGE_DEPS))" \
 		RUN_CMD "$(strip $(RUN_CMD))" \
@@ -157,7 +160,7 @@ show-env:
 
 .PHONY: image
 image: $(IMAGE_DEPS)
-	$(C_BUILDER_BUILD_CMD) .
+	$(C_BUILDER_BUILD_CMD) $(IMAGE_CONTEXT)
 
 .PHONY: push
 push:
