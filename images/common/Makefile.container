@@ -140,22 +140,22 @@ clean:
 .PHONY: show-env
 show-env:
 	@ printf '%-20s %s\n' \
-		C_MANAGER "$(strip $(C_MANAGER))" \
-		C_MANAGER_CMD "$(strip $(C_MANAGER_CMD))" \
-		C_MANAGER_RUN_CMD "$(strip $(C_MANAGER_RUN_CMD))" \
-		C_UNSHARE "$(strip $(C_UNSHARE))" \
-		C_UNSHARE_CMD "$(strip $(C_UNSHARE_CMD))" \
-		C_BUILDER "$(strip $(C_BUILDER))" \
-		C_BUILDER_CMD "$(strip $(C_BUILDER_CMD))" \
-		C_BUILDER_BUILD_CMD "$(strip $(C_BUILDER_BUILD_CMD))" \
-		C_BUILDER_PUSH_CMD "$(strip $(C_BUILDER_PUSH_CMD))" \
-		C_FILE "$(strip $(C_FILE))" \
-		IMAGE_NAME "$(strip $(IMAGE_NAME))" \
-		IMAGE_CONTEXT "$(strip $(IMAGE_CONTEXT))" \
-		IMAGE_PLATFORM "$(strip $(IMAGE_PLATFORM))" \
-		IMAGE_DEPS "$(strip $(IMAGE_DEPS))" \
-		RUN_CMD "$(strip $(RUN_CMD))" \
-		RUN_DEPS "$(strip $(RUN_DEPS))" \
+		C_MANAGER "$(C_MANAGER)" \
+		C_MANAGER_CMD "$(C_MANAGER_CMD)" \
+		C_MANAGER_RUN_CMD "$(C_MANAGER_RUN_CMD)" \
+		C_UNSHARE "$(C_UNSHARE)" \
+		C_UNSHARE_CMD "$(C_UNSHARE_CMD)" \
+		C_BUILDER "$(C_BUILDER)" \
+		C_BUILDER_CMD "$(C_BUILDER_CMD)" \
+		C_BUILDER_BUILD_CMD "$(C_BUILDER_BUILD_CMD)" \
+		C_BUILDER_PUSH_CMD "$(C_BUILDER_PUSH_CMD)" \
+		C_FILE "$(C_FILE)" \
+		IMAGE_NAME "$(IMAGE_NAME)" \
+		IMAGE_CONTEXT "$(IMAGE_CONTEXT)" \
+		IMAGE_PLATFORM "$(IMAGE_PLATFORM)" \
+		IMAGE_DEPS "$(IMAGE_DEPS)" \
+		RUN_CMD "$(RUN_CMD)" \
+		RUN_DEPS "$(RUN_DEPS)" \
 	;
 
 .PHONY: image
