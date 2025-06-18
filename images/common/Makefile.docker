@@ -1,21 +1,18 @@
 DOCKER?=		docker
+DOCKER_OPTS?=
 ROOTLESSKIT?=		rootlesskit
 
 ## ======================================================================
 
-C_MANAGER?=$(shell \
-	command -v $(DOCKER) && exit 0; \
-	echo "$(DOCKER) command not found"; \
-	exit 1; \
-)
+_C_MANAGER_OPTS=	$(DOCKER_OPTS)
 
 ## ----------------------------------------------------------------------
 
-C_BUILDER?=		$(C_MANAGER) buildx
+C_BUILDER?=		$(C_MANAGER) $(DOCKER_OPTS) buildx
 
 _C_BUILDER_ENV=
 
-_C_BUILDER_BUILD_OPTS=	--tag $(IMAGE_NAME) --progress plain
+_C_BUILDER_BUILD_OPTS=	--tag $(IMAGE_NAME) --load --progress plain
 
 ## ----------------------------------------------------------------------
 

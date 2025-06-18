@@ -1,16 +1,13 @@
 PODMAN?=		podman
+PODMAN_OPTS?=
 
 ## ======================================================================
 
-C_MANAGER?=$(shell \
-	command -v $(PODMAN) && exit 0; \
-	echo "$(PODMAN) command not found"; \
-	exit 1; \
-)
+_C_MANAGER_OPTS=	$(PODMAN_OPTS)
 
 ## ----------------------------------------------------------------------
 
-C_BUILDER?=		$(C_MANAGER)
+C_BUILDER?=		$(C_MANAGER) $(PODMAN_OPTS)
 
 _C_BUILDER_ENV=	
 
