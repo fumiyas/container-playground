@@ -10,15 +10,7 @@ IMAGE_NAME?=		$(error Set IMAGE_NAME in your Makefile)
 IMAGE_CONTEXT?=		.
 
 IMAGE_PLATFORM_OS?=	linux
-
-ifeq ($(ARCH),x86_64)
-IMAGE_PLATFORM_ARCH?=	amd64
-endif
-ifeq ($(ARCH),aarch64)
-IMAGE_PLATFORM_ARCH?=	arm64
-endif
 IMAGE_PLATFORM_ARCH?=	$(ARCH)
-
 IMAGE_PLATFORM?=	$(IMAGE_PLATFORM_OS)/$(IMAGE_PLATFORM_ARCH)
 
 ## ======================================================================
