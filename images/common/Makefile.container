@@ -15,7 +15,9 @@ IMAGE_PLATFORM?=	$(IMAGE_PLATFORM_OS)/$(IMAGE_PLATFORM_ARCH)
 
 ## ======================================================================
 
+## Prefer Podman (rootless by default)
 C_MANAGERS?=		$(PODMAN) $(DOCKER)
+## Prefer Containerfile (generic name)
 C_FILES?=		Containerfile Dockerfile
 
 ifndef C_MANAGER
@@ -79,12 +81,10 @@ C_BUILDER_CMD?=$(strip \
 C_BUILDER_BUILD_ENV?=
 C_BUILDER_BUILD_OPTS?=
 C_BUILDER_BUILD_CMD?= $(strip \
-	$(_C_BUILDER_BUILD_ENV) \
-	$(C_BUILDER_BUILD_ENV) \
+	$(_C_BUILDER_BUILD_ENV) $(C_BUILDER_BUILD_ENV) \
 	$(C_BUILDER_CMD) \
 	build \
-	$(_C_BUILDER_BUILD_OPTS) \
-	$(C_BUILDER_BUILD_OPTS) \
+	$(_C_BUILDER_BUILD_OPTS) $(C_BUILDER_BUILD_OPTS) \
 )
 
 _C_BUILDER_BUILD_OPTS+=	--file $(C_FILE) --platform $(IMAGE_PLATFORM)
